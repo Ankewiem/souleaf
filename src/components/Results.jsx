@@ -161,7 +161,7 @@ export default function Results() {
               <p className="text-gray-800 font-medium text-[15px] md:text-[18px] leading-snug">
                 {result.depression_risk >= 0.5
                   ? 'Mình nhận thấy bạn đang phải đối mặt với những cảm xúc khá nặng nề. Hãy nhớ rằng việc cảm thấy không ổn cũng là một điều bình thường, và bạn không nhất thiết phải tự mình vượt qua tất cả. Mình luôn ở đây lắng nghe bạn. Hãy thử dành 5 phút hít thở sâu nhé, mọi chuyện tốt đẹp rồi sẽ đến với bạn mà thôi. Nếu bạn muốn tâm sự thì hãy viết ra trên này nhé. Mong rằng điều này sẽ giúp bạn cảm thấy tốt hơn.'
-                  : 'Mình rât vui khi thây các chî sô tâm trang cua ban ang o ngÛng an toàn. Hãy tiêp tûc dành thôi gian cham soc bân thân và duy trì nhung thu quen tích câp này nhé!'}
+                  : 'Mình rất vui khi thấy các chỉ số tâm trạng của bạn đang ở ngưỡng an toàn. Hãy tiếp tục dành thời gian chăm sóc bản thân và duy trì những thói quen tích cực này nhé!'}
               </p>
             </div>
             <RiskCircle label="tỷ lệ rủi ro" value={depressionPct} />
@@ -183,7 +183,7 @@ export default function Results() {
               <p className="text-gray-800 font-medium text-[15px] md:text-[18px] leading-snug">
                 {result.suicide_risk >= 0.5
                   ? 'Bạn ơi, mình thực sự lo lắng khi thấy bạn đang có những suy nghĩ đau lòng này. Bạn không cô đơn đâu, luôn có những người sẵn sàng lắng nghe và giúp đỡ bạn ngay lúc này. Hãy thử trò chuyện với một người bạn tin tưởng, hoặc liên hệ với các chuyên gia tâm lý nhé. Bạn là một sự tồn tại quý giá, đừng rời bỏ chính mình nhé!'
-                  : 'Cám ôn ban dã chia sê thât lòng vói mình. Giû cho tâm trí an toàn là uu tiên sô môt, mình sê luôn dông hành dê cùng ban duy trì trang thái tích câp này.'}
+                  : 'Cảm ơn bạn đã chia sẻ thật lòng với mình. Giữ cho tâm trí an toàn là ưu tiên số một, mình sẽ luôn đồng hành để cùng bạn duy trì trạng thái tích cực này.'}
               </p>
               {result.suicide_risk >= 0.5 && (
                 <div className="mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
@@ -197,7 +197,7 @@ export default function Results() {
                 </div>
               )}
             </div>
-            <RiskCircle label="tý lê rûi ro" value={suicidePct} />
+            <RiskCircle label="tỷ lê rủi ro" value={suicidePct} />
           </div>
         </div>
 
