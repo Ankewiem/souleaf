@@ -45,6 +45,14 @@ export default function Results() {
   
   // Define risk threshold logic
   const isHighRisk = result?.depression_risk >= 0.5;
+  
+  // Group advice mapping object
+  const groupAdviceMap = {
+    'Chiến binh kiệt sức': 'Hệ thống ghi nhận cường độ làm việc và áp lực ép của bạn. Bạn đang vắt kiệt bản thân. Hãy ưu tiên ngủ ngay!',
+    'Cân bằng lý tưởng': 'Bạn tìm thấy điểm ngọt giữa việc học và sống. Hãy duy trì thói quen hiện tại.',
+    'Gánh nặng bủa vây': 'Áp lực học tập và tài chính của bạn đang rất lớn. Dù cố gắng giữ nếp sống, nhưng bạn cần người san sẻ. Hãy kết nối với các quỹ hỗ trợ sinh viên ngay.',
+    'Mất định hướng': 'Áp lực của bạn không cao, nhưng bạn lại thiếu ngủ và chán nản. Hãy bước ra ngoài, tham gia ngoại khóa để tìm lại động lực sống.'
+  };
 
   // If navigated directly without data
   if (!result) {
@@ -135,7 +143,7 @@ export default function Results() {
               <h2 className="text-green-800 font-semibold text-[32px] md:text-[44px] leading-tight">
                 Bạn{' '}
                 <span className="text-green-900 font-bold">
-                  {hasDepression ? 'CÓ' : 'KHÔNG CÓ'}
+                  {result.depression_risk >= 0.5 ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
                 dấu hiệu trầm cảm
               </h2>
@@ -157,7 +165,7 @@ export default function Results() {
               <h2 className="text-green-800 font-semibold text-[32px] md:text-[44px] leading-tight">
                 Bạn{' '}
                 <span className="text-green-900 font-bold">
-                  {hasSuicideRisk ? 'CÓ' : 'KHÔNG CÓ'}
+                  {result.suicide_risk >= 0.5 ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
                 nguy cơ tự hại
               </h2>
