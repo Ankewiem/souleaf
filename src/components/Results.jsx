@@ -128,15 +128,15 @@ export default function Results() {
               </h2>
               <div className="flex flex-col gap-2">
                 <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
-                  {result.cgpa >= 7.5 ? '[Trang thái Tót - Ôn dinh]' :
-                   result.cgpa >= 6.0 ? '[Trang thái Trung bình - Cân luu ý]' :
-                   '[Trang thái Cánh báo - Do áp luc/stress]'}
+                  {result.cgpa >= 7.5 ? '[Trang thái Tốt - Ổn định]' :
+                   result.cgpa >= 6.0 ? '[Trang thái Trung bình - Cần lưu ý]' :
+                   '[Trang thái Cảnh báo - Do áp lực/stress]'}
                 </p>
                 <p className="text-[#020202] font-light text-[15px] md:text-[17px] max-w-[380px] leading-snug">
                   {result.cgpa >= 7.5 ? 
                    `Vói phong dô hiên tai, ban ang huông tói mûc tiêu ${result.cgpa}. Moi thuç dang rât thuân lý, cû duÛ trình nhîp dô nay nhe!` :
                    result.cgpa >= 6.0 ? 
-                   `Dû báo diêm sô cua ban dang o mûc ${result.cgpa}. Kêt qua nay khá ôn nhÛng, ngu bôt chút áp lÛc và tâp trung hÕn, mình tin con sô nay sê con bût phá hÕn nÛa dây.` :
+                   `Dự báo điểm số của bạn đang ở mức ${Number(result.cgpa).toFixed(1)}. Kết quả này khá ổn, nhưng nếu bớt chút áp lực và tập trung hơn, mình tin con số này sẽ còn bứt phá hơn nữa đấy.` :
                    `ChÛ sô tâm trang dang keo kêt qua dû kiên xuông con ${result.cgpa}. DÛng quá lo lâng vê con sô, ngu chÛng mình xÛ lý dûc áp lÛc lÛc nay, diêm sô sê tÛ khác quay trô lai ngÛng cao thôi.`}
                 </p>
               </div>
@@ -156,11 +156,11 @@ export default function Results() {
                 <span className="text-green-900 font-bold">
                   {result.depression_risk >= 0.5 ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
-                dau hiêu tram cam
+                dấu hiệu trầm cảm
               </h2>
               <p className="text-gray-800 font-medium text-[15px] md:text-[18px] leading-snug">
                 {result.depression_risk >= 0.5
-                  ? 'Mình nhin thây ban ang phai doi mat voi nhung cam xúc khá nang nê. Hãy nhó râng viêc cam thây không ôn cung là môt diêu binh thuông, và ban không nhât thiêt phai tu minh vuot qua hêt. Mình luôn o dây lang nghe ban. Hãy thû dành 5 phút hit thô sâu nhé, moi chuyen tôp dêp rôi sê dên vói ban mà thôi. Ngu ban muôn tâm su thì hãy viêt ra trên này nhé. Mong râng diêu này sê giúp ban cam thây tô hõn.'
+                  ? 'Mình nhận thấy bạn đang phải đối mặt với những cảm xúc khá nặng nề. Hãy nhớ rằng việc cảm thấy không ổn cũng là một điều bình thường, và bạn không nhất thiết phải tự mình vượt qua tất cả. Mình luôn ở đây lắng nghe bạn. Hãy thử dành 5 phút hít thở sâu nhé, mọi chuyện tốt đẹp rồi sẽ đến với bạn mà thôi. Nếu bạn muốn tâm sự thì hãy viết ra trên này nhé. Mong rằng điều này sẽ giúp bạn cảm thấy tốt hơn.'
                   : 'Mình rât vui khi thây các chî sô tâm trang cua ban ang o ngÛng an toàn. Hãy tiêp tûc dành thôi gian cham soc bân thân và duy trì nhung thu quen tích câp này nhé!'}
               </p>
             </div>
@@ -182,16 +182,16 @@ export default function Results() {
               </h2>
               <p className="text-gray-800 font-medium text-[15px] md:text-[18px] leading-snug">
                 {result.suicide_risk >= 0.5
-                  ? 'Ban oi, mình thûc suy lo khi thây ban ang có nhung suy nghî dau lòng này. Ban không cô don dâu, luôn có nhung nguôn sãn sãng lang nghe và giúp dô ban ngay lúc này. Hãy thû trò chuyên vói môt nguôn ban tin tuông, hoâc liên hê vói các chuyên gia tâm lý nhé. Ban là môt su tôn tai quy giá, dúng rôi bôi chính minh nhé!'
+                  ? 'Bạn ơi, mình thực sự lo lắng khi thấy bạn đang có những suy nghĩ đau lòng này. Bạn không cô đơn đâu, luôn có những người sẵn sàng lắng nghe và giúp đỡ bạn ngay lúc này. Hãy thử trò chuyện với một người bạn tin tưởng, hoặc liên hệ với các chuyên gia tâm lý nhé. Bạn là một sự tồn tại quý giá, đừng rời bỏ chính mình nhé!'
                   : 'Cám ôn ban dã chia sê thât lòng vói mình. Giû cho tâm trí an toàn là uu tiên sô môt, mình sê luôn dông hành dê cùng ban duy trì trang thái tích câp này.'}
               </p>
               {result.suicide_risk >= 0.5 && (
                 <div className="mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
-                  <p className="text-red-800 font-bold text-lg mb-3">ð DUÔNG DÂY NÓNG HÔ TRÔ TÂM LÝ KÍP THÔI:</p>
+                  <p className="text-red-800 font-bold text-lg mb-3">🚨 ĐƯỜNG DÂY NÓNG HỖ TRỢ TÂM LÝ KỊP THỜI:</p>
                   <ul className="text-red-700 font-medium text-sm space-y-1">
-                    <li>- Duông dây nóng Ngày Mai: 096 306 1414</li>
-                    <li>- Viên Sûc khûe Tâm thân QG: 024 3576 5344</li>
-                    <li>- Cáp cuu Trâm cam (TP.HCM): 1900 1267 hoâc 115</li>
+                    <li>- Đường dây nóng Ngày Mai: 096 306 1414</li>
+                    <li>- Viện Sức khỏe Tâm thần QG: 024 3576 5344</li>
+                    <li>- Cấp cứu Trầm cảm (TP.HCM): 1900 1267 hoặc 115</li>
                     <li>- Hello Doctor: 1900 1246</li>
                   </ul>
                 </div>
@@ -216,31 +216,31 @@ export default function Results() {
               
               <div className="flex flex-col gap-3">
                 <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
-                  Thông diêp:
+                  Thông điệp:
                 </p>
                 <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
-                  {result.cluster_name === 'Chiên binh kiêt suc' ? 
-                   'Ban là môt nguôn câu toàn và có thành tích xuât sác, nhung ban ang tra giá bâng sûc khûe tinh thân. Dúng dê thành công di kèm vói su kiêt suc nhé.' :
-                   result.cluster_name === 'Cân binh lý tuông' ? 
-                   'Ban dã tìm duoc "diêm ngôt" giûa viêc hoc và cuôc sông. Dây là nhóm có sûc khûe tâm thân ôn dinh nhât trong công dông.' :
-                   result.cluster_name === 'Gánh nang buâu vây' ? 
-                   'AI nhin thây ban ang phai doi mat vói quá nhiêu áp lïc tû nhiêu phía cùng lúc. Ban không cô don, có 20% sinh viên trong hê thông cung ang o trang thái giông ban.' :
-                   'Su chán nãn kéo dài có thê là tín hiêu cho thây ban ang di chêh khôi dâm mê cua mình.'}
+                  {result.cluster_name === 'Chiến binh kiệt sức' ? 
+                   'Bạn là một người cầu toàn và có thành tích xuất sắc, nhưng bạn đang trả giá bằng sức khỏe tinh thần. Đừng để thành công đi kèm với sự kiệt sức nhé.' :
+                   result.cluster_name === 'Cân bằng lý tưởng' ? 
+                   'Bạn đã tìm được "điểm ngọt" giữa việc học và cuộc sống. Đây là nhóm có sức khỏe tâm thần ổn định nhất trong cộng đồng.' :
+                   result.cluster_name === 'Gánh nặng bủa vây' ? 
+                   'AI nhận thấy bạn đang phải đối mặt với quá nhiều áp lực từ nhiều phía cùng lúc. Bạn không cô đơn, có 20% sinh viên trong hệ thống cũng đang ở trạng thái giống bạn.' :
+                   'Sự chán nản kéo dài có thể là tín hiệu cho thấy bạn đang đi chệch khỏi đam mê của mình.'}
                 </p>
               </div>
               
               <div className="flex flex-col gap-3">
                 <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
-                  Lôi khuyên:
+                  Lời khuyên:
                 </p>
                 <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
-                  {result.cluster_name === 'Chiên binh kiêt suc' ? 
-                   'Hoc cách nói "Không" vói nhung viêc chua cân thiêt không phai là bôi cuôc, mà là cách dê ban tâp trung cho nhung diêu quan trong nhât. Dêm nay, hãy uu tiên cho môt giâc ngu trôn vên thay vì cô thêm vài giô. Ban xûng dâng dûc dâng nghi ngoi.' :
-                   result.cluster_name === 'Cân binh lý tuông' ? 
-                   'Duy trì dûc su cân binh này là môt ky nang tuyêt vôi. Dúng quên râng phong dô ôn dinh quan trong hôn su bût phá nhât thiôi. Ngu ban dã làm chu dûc duoc thôi gian, hãy thû mô lòng chia sê kinh nghiêm hoâc truyên nang luông tích câp này cho ban bè xung quanh nhé. Su kêt nôi sê giúp niêm vui hoc tap cua ban nhân dôi.' :
-                   result.cluster_name === 'Gánh nang buâu vây' ? 
-                   'Nhung gi ban ang trôi qua thûc sây rât nang nê. Dúng cô gông gánh môt minh ngu moi thuç vuôt qua khà nang chûu dung. Tìm kiêm su giúp dô là môt hành dông dûm cam, không phai yêu dâu. Chúng mình luôn o dây dê kêt nôi ban vói nhung nguôn lïc hõ trô tôt nhât.' :
-                   'Ngu viêc hoc chi còn là áp lïc mà không có niêm vui, hãy dúng lai môt chút dê lâng nghe bân thân. Có thê ban chua tìm dúng phuong pháp hoâc môi truyên phù hûp. Dúng êp minh di tiêp môt con dôi không thuôc vê ban, hãy thû kham phá nhung co hôi mõi dê tìm lai su hùng khôi.'}
+                  {result.cluster_name === 'Chiến binh kiệt sức' ? 
+                   'Học cách nói "Không" với những việc chưa cần thiết không phải là bỏ cuộc, mà là cách để bạn tập trung cho những điều quan trọng nhất. Đêm nay, hãy ưu tiên cho một giấc ngủ trọn vẹn thay vì cố thức thêm vài tiếng. Bạn xứng đáng được nghỉ ngơi.' :
+                   result.cluster_name === 'Cân bằng lý tưởng' ? 
+                   'Duy trì được sự cân bằng này là một kỹ năng tuyệt vời. Đừng quên rằng sự ổn định quan trọng hơn sự bứt phá nhất thời. Khi bạn đã làm chủ được thời gian, hãy thử mời lòng chia sẻ kinh nghiệm hoặc truyền năng lượng tích cực này cho bạn bè xung quanh nhé. Sự kết nối sẽ giúp niềm vui học tập của bạn nhân đôi.' :
+                   result.cluster_name === 'Gánh nặng bủa vây' ? 
+                   'Những gì bạn đang trải qua thực sự rất nặng nề. Đừng cố gắng gánh một mình mọi thứ vượt quá khả năng chịu đựng. Tìm kiếm sự giúp đỡ là một hành động dũng cảm, không phải yếu đuối. Chúng mình luôn ở đây để kết nối bạn với những nguồn lực hỗ trợ tốt nhất.' :
+                   'Nếu việc học chỉ còn là áp lực mà không có niềm vui, hãy dừng lại một chút để lắng nghe bản thân. Có thể bạn chưa tìm đúng phương pháp hoặc môi trường phù hợp. Đừng ép mình đi tiếp một con đường không thuộc về bạn, hãy thử khám phá những cơ hội mới để tìm lại sự hứng khởi.'}
                 </p>
               </div>
             </div>
