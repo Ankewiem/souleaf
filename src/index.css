@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, Roboto, Helvetica, sans-serif;
+  background-color: #FCFCFC;
+  color: #020202;
+  margin: 0;
+  padding: 0;
+}
+
+@layer components {
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 px-10 py-4 rounded-full bg-[#F1F0DB] text-[#020202] font-medium text-xl tracking-[-1px] transition-opacity hover:opacity-80;
+  }
+
+  .btn-outline {
+    @apply flex items-center justify-center gap-2 px-10 py-4 rounded-full border border-[rgba(2,2,2,0.25)] text-[#020202] font-medium text-xl tracking-[-1px] transition-opacity hover:opacity-70;
+  }
+
+  .btn-mint {
+    @apply flex items-center justify-center gap-2 px-10 py-4 rounded-full bg-[#C2EFDC] text-[#020202] font-medium text-xl tracking-[-1px] transition-opacity hover:opacity-80;
+  }
+
+  .nav-link {
+    @apply text-[#020202] font-normal text-base underline decoration-[#020202] tracking-[-0.75px] hover:opacity-70 transition-opacity;
+  }
+}
