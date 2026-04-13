@@ -128,16 +128,16 @@ export default function Results() {
               </h2>
               <div className="flex flex-col gap-2">
                 <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
-                  {result.cgpa >= 7.5 ? '[Trang thái Tốt - Ổn định]' :
-                   result.cgpa >= 6.0 ? '[Trang thái Trung bình - Cần lưu ý]' :
-                   '[Trang thái Cảnh báo - Do áp lực/stress]'}
+                  {result.cgpa >= 7.5 ? '[Trạng thái Tốt - Ổn định]' :
+                   result.cgpa >= 6.0 ? '[Trạng thái Trung bình - Cần lưu ý]' :
+                   '[Trạng thái Cảnh báo - Do áp lực/stress]'}
                 </p>
                 <p className="text-[#020202] font-light text-[15px] md:text-[17px] max-w-[380px] leading-snug">
                   {result.cgpa >= 7.5 ? 
-                   `Vói phong dô hiên tai, ban ang huông tói mûc tiêu ${result.cgpa}. Moi thuç dang rât thuân lý, cû duÛ trình nhîp dô nay nhe!` :
+                   `Với phong độ hiện tại, bạn đang hướng tới mục tiêu ${Number(result.cgpa).toFixed(1)}. Mọi thứ đang rất thuận lợi, cứ duy trì trình độ này nhé!` :
                    result.cgpa >= 6.0 ? 
                    `Dự báo điểm số của bạn đang ở mức ${Number(result.cgpa).toFixed(1)}. Kết quả này khá ổn, nhưng nếu bớt chút áp lực và tập trung hơn, mình tin con số này sẽ còn bứt phá hơn nữa đấy.` :
-                   `ChÛ sô tâm trang dang keo kêt qua dû kiên xuông con ${result.cgpa}. DÛng quá lo lâng vê con sô, ngu chÛng mình xÛ lý dûc áp lÛc lÛc nay, diêm sô sê tÛ khác quay trô lai ngÛng cao thôi.`}
+                   `Chú số tâm trạng đang kéo kết quả xuống con ${Number(result.cgpa).toFixed(1)}. Dừng quá lo lắng về con số, nhờ chuyên gia mình xử lý được áp lực lúc này, điểm số sẽ tự khác quay trở lại nồng cao thôi.`}
                 </p>
               </div>
             </div>
