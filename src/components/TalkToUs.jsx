@@ -86,7 +86,7 @@ export default function TalkToUs() {
                   id="last-name"
                   className="flex-1 px-[22px] py-[17px] rounded-[13px] border-[1.1px] border-[rgba(2,2,2,0.05)] bg-[rgba(255,255,255,0.15)] backdrop-blur-[17.5px] text-white text-[15px] font-light tracking-[-0.75px] outline-none transition-colors placeholder:text-[rgba(255,255,255,0.7)] focus:bg-[rgba(255,255,255,0.25)]"
                   type="text"
-                  placeholder="Hô"
+                  placeholder="Hõ"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   required

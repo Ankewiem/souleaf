@@ -95,7 +95,7 @@ export default function Results() {
       <div className="max-w-[1360px] mx-auto px-4 pb-16 flex flex-col gap-6">
 
         {/* ── Card 1: Burnout Index ─────────────────────────────────── */}
-        <div className="bg-white rounded-[40px] px-10 py-10 md:px-16 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-0 md:justify-between overflow-hidden relative">
+        <div className="bg-white rounded-[40px] px-10 py-10 md:px-16 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-16 md:justify-center overflow-hidden relative">
           <div className="flex flex-col gap-6 z-10">
             <h2 className="text-green-800 font-extrabold text-[28px] md:text-[36px] tracking-wide uppercase">
               Chỉ số cạn kiệt
@@ -187,7 +187,7 @@ export default function Results() {
             </h2>
             <div className="border-t border-[rgba(0,0,0,0.15)]" />
 
-            <div className="flex flex-col gap-3 pr-32">
+            <div className="flex flex-col gap-3 pr-48">
               <p className="text-[#020202] font-semibold text-[20px] md:text-[26px]">
                 {result.cluster_name}
               </p>
