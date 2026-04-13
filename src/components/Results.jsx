@@ -126,9 +126,20 @@ export default function Results() {
               <h2 className="text-[#247D3C] font-bold text-[22px] md:text-[28px]">
                 Predicted Academic Performance (CGPA)
               </h2>
-              <p className="text-[#020202] font-light text-[15px] md:text-[17px] max-w-[380px] leading-snug">
-                Dựa trên mức độ áp lực và trầm cảm hiện tại của bạn, AI ước tính điểm trung bình (CGPA) mà bạn có thể đạt được.
-              </p>
+              <div className="flex flex-col gap-2">
+                <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
+                  {result.cgpa >= 7.5 ? '[Trang thái Tót - Ôn dinh]' :
+                   result.cgpa >= 6.0 ? '[Trang thái Trung bình - Cân luu ý]' :
+                   '[Trang thái Cánh báo - Do áp luc/stress]'}
+                </p>
+                <p className="text-[#020202] font-light text-[15px] md:text-[17px] max-w-[380px] leading-snug">
+                  {result.cgpa >= 7.5 ? 
+                   `Vói phong dô hiên tai, ban ang huông tói mûc tiêu ${result.cgpa}. Moi thuç dang rât thuân lý, cû duÛ trình nhîp dô nay nhe!` :
+                   result.cgpa >= 6.0 ? 
+                   `Dû báo diêm sô cua ban dang o mûc ${result.cgpa}. Kêt qua nay khá ôn nhÛng, ngu bôt chút áp lÛc và tâp trung hÕn, mình tin con sô nay sê con bût phá hÕn nÛa dây.` :
+                   `ChÛ sô tâm trang dang keo kêt qua dû kiên xuông con ${result.cgpa}. DÛng quá lo lâng vê con sô, ngu chÛng mình xÛ lý dûc áp lÛc lÛc nay, diêm sô sê tÛ khác quay trô lai ngÛng cao thôi.`}
+                </p>
+              </div>
             </div>
             <ScoreCircle value={cgpaValue} max="10" large />
           </div>
@@ -145,12 +156,12 @@ export default function Results() {
                 <span className="text-green-900 font-bold">
                   {result.depression_risk >= 0.5 ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
-                dấu hiệu trầm cảm
+                dau hiêu tram cam
               </h2>
               <p className="text-gray-800 font-medium text-[15px] md:text-[18px] leading-snug">
-                {hasDepression
-                  ? 'Mình nhận thấy bạn đang phải đối mặt với những cảm xúc khá nặng nề. Hãy nhớ rằng việc cảm thấy không ổn cũng là một điều bình thường, và bạn không nhất thiết phải tự mình vượt qua tất cả. Mình luôn ở đây lắng nghe bạn.\nHãy thử dành 5 phút hít thở sâu nhé, mọi chuyện tốt đẹp rồi sẽ đến với bạn mà thôi\nNếu bạn muốn tâm sự thì hãy viết ra trên này nhé. Mong rằng điều này sẽ giúp bạn cảm thấy tốt hơn'
-                  : 'Bạn đang có trạng thái tinh thần ổn định. Hãy tiếp tục duy trì lối sống lành mạnh và không ngại chia sẻ khi cần nhé!'}
+                {result.depression_risk >= 0.5
+                  ? 'Mình nhin thây ban ang phai doi mat voi nhung cam xúc khá nang nê. Hãy nhó râng viêc cam thây không ôn cung là môt diêu binh thuông, và ban không nhât thiêt phai tu minh vuot qua hêt. Mình luôn o dây lang nghe ban. Hãy thû dành 5 phút hit thô sâu nhé, moi chuyen tôp dêp rôi sê dên vói ban mà thôi. Ngu ban muôn tâm su thì hãy viêt ra trên này nhé. Mong râng diêu này sê giúp ban cam thây tô hõn.'
+                  : 'Mình rât vui khi thây các chî sô tâm trang cua ban ang o ngÛng an toàn. Hãy tiêp tûc dành thôi gian cham soc bân thân và duy trì nhung thu quen tích câp này nhé!'}
               </p>
             </div>
             <RiskCircle label="tỷ lệ rủi ro" value={depressionPct} />
@@ -170,12 +181,23 @@ export default function Results() {
                 nguy cơ tự hại
               </h2>
               <p className="text-gray-800 font-medium text-[15px] md:text-[18px] leading-snug">
-                {hasSuicideRisk
-                  ? 'Cảm ơn bạn đã chia sẻ thật lòng với mình. Giữ cho tâm trí an toàn là ưu tiên số một, mình sẽ luôn đồng hành để cùng bạn duy trì trạng thái tích cực này'
-                  : 'Bạn đang trong trạng thái an toàn. Hãy tiếp tục chăm sóc bản thân và liên hệ với chúng tôi nếu bạn cần hỗ trợ nhé!'}
+                {result.suicide_risk >= 0.5
+                  ? 'Ban oi, mình thûc suy lo khi thây ban ang có nhung suy nghî dau lòng này. Ban không cô don dâu, luôn có nhung nguôn sãn sãng lang nghe và giúp dô ban ngay lúc này. Hãy thû trò chuyên vói môt nguôn ban tin tuông, hoâc liên hê vói các chuyên gia tâm lý nhé. Ban là môt su tôn tai quy giá, dúng rôi bôi chính minh nhé!'
+                  : 'Cám ôn ban dã chia sê thât lòng vói mình. Giû cho tâm trí an toàn là uu tiên sô môt, mình sê luôn dông hành dê cùng ban duy trì trang thái tích câp này.'}
               </p>
+              {result.suicide_risk >= 0.5 && (
+                <div className="mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
+                  <p className="text-red-800 font-bold text-lg mb-3">ð DUÔNG DÂY NÓNG HÔ TRÔ TÂM LÝ KÍP THÔI:</p>
+                  <ul className="text-red-700 font-medium text-sm space-y-1">
+                    <li>- Duông dây nóng Ngày Mai: 096 306 1414</li>
+                    <li>- Viên Sûc khûe Tâm thân QG: 024 3576 5344</li>
+                    <li>- Cáp cuu Trâm cam (TP.HCM): 1900 1267 hoâc 115</li>
+                    <li>- Hello Doctor: 1900 1246</li>
+                  </ul>
+                </div>
+              )}
             </div>
-            <RiskCircle label="tỷ lệ rủi ro" value={suicidePct} />
+            <RiskCircle label="tý lê rûi ro" value={suicidePct} />
           </div>
         </div>
 
@@ -187,20 +209,40 @@ export default function Results() {
             </h2>
             <div className="border-t border-[rgba(0,0,0,0.15)]" />
 
-            <div className="flex flex-col gap-3 pr-48">
+            <div className="flex flex-col gap-4 pr-48">
               <p className="text-[#020202] font-semibold text-[20px] md:text-[26px]">
                 {result.cluster_name}
               </p>
-              <ul className="list-disc list-inside flex flex-col gap-2 text-[#020202] text-[15px] md:text-[18px] leading-snug">
-                {Array.isArray(result.cluster_advice)
-                  ? result.cluster_advice.map((line, i) => (
-                      <li key={i}>{line}</li>
-                    ))
-                  : result.cluster_advice
-                      .split('\n')
-                      .filter(Boolean)
-                      .map((line, i) => <li key={i}>{line}</li>)}
-              </ul>
+              
+              <div className="flex flex-col gap-3">
+                <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
+                  Thông diêp:
+                </p>
+                <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
+                  {result.cluster_name === 'Chiên binh kiêt suc' ? 
+                   'Ban là môt nguôn câu toàn và có thành tích xuât sác, nhung ban ang tra giá bâng sûc khûe tinh thân. Dúng dê thành công di kèm vói su kiêt suc nhé.' :
+                   result.cluster_name === 'Cân binh lý tuông' ? 
+                   'Ban dã tìm duoc "diêm ngôt" giûa viêc hoc và cuôc sông. Dây là nhóm có sûc khûe tâm thân ôn dinh nhât trong công dông.' :
+                   result.cluster_name === 'Gánh nang buâu vây' ? 
+                   'AI nhin thây ban ang phai doi mat vói quá nhiêu áp lïc tû nhiêu phía cùng lúc. Ban không cô don, có 20% sinh viên trong hê thông cung ang o trang thái giông ban.' :
+                   'Su chán nãn kéo dài có thê là tín hiêu cho thây ban ang di chêh khôi dâm mê cua mình.'}
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
+                  Lôi khuyên:
+                </p>
+                <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
+                  {result.cluster_name === 'Chiên binh kiêt suc' ? 
+                   'Hoc cách nói "Không" vói nhung viêc chua cân thiêt không phai là bôi cuôc, mà là cách dê ban tâp trung cho nhung diêu quan trong nhât. Dêm nay, hãy uu tiên cho môt giâc ngu trôn vên thay vì cô thêm vài giô. Ban xûng dâng dûc dâng nghi ngoi.' :
+                   result.cluster_name === 'Cân binh lý tuông' ? 
+                   'Duy trì dûc su cân binh này là môt ky nang tuyêt vôi. Dúng quên râng phong dô ôn dinh quan trong hôn su bût phá nhât thiôi. Ngu ban dã làm chu dûc duoc thôi gian, hãy thû mô lòng chia sê kinh nghiêm hoâc truyên nang luông tích câp này cho ban bè xung quanh nhé. Su kêt nôi sê giúp niêm vui hoc tap cua ban nhân dôi.' :
+                   result.cluster_name === 'Gánh nang buâu vây' ? 
+                   'Nhung gi ban ang trôi qua thûc sây rât nang nê. Dúng cô gông gánh môt minh ngu moi thuç vuôt qua khà nang chûu dung. Tìm kiêm su giúp dô là môt hành dông dûm cam, không phai yêu dâu. Chúng mình luôn o dây dê kêt nôi ban vói nhung nguôn lïc hõ trô tôt nhât.' :
+                   'Ngu viêc hoc chi còn là áp lïc mà không có niêm vui, hãy dúng lai môt chút dê lâng nghe bân thân. Có thê ban chua tìm dúng phuong pháp hoâc môi truyên phù hûp. Dúng êp minh di tiêp môt con dôi không thuôc vê ban, hãy thû kham phá nhung co hôi mõi dê tìm lai su hùng khôi.'}
+                </p>
+              </div>
             </div>
           </div>
 
