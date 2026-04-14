@@ -102,65 +102,50 @@ def predict():
     bonus = 0.0
     
     # Penalties
-    if mapped_data['Study Satisfaction'] <= 2.0:
+    if mapped_data['Study Satisfaction'] <= 2:
         penalty += 1.5
     
     if prob_dep > 0.5 or pred_burnout > 70.0:
         penalty += 1.0
     
-    if mapped_data['Sleep Duration'] == 0 or mapped_data['Dietary Habits'] == 0:  # 0 = 'Less than 5 hours' or 'Unhealthy'
+    if mapped_data['Sleep Duration'] == 0 or mapped_data['Dietary Habits'] == 0:
         penalty += 0.5
     
     # Bonuses
-    if mapped_data['Study Satisfaction'] >= 4.0:
+    if mapped_data['Study Satisfaction'] >= 4:
         bonus += 0.8
     
-    if mapped_data['Sleep Duration'] >= 2 and mapped_data['Dietary Habits'] == 2:  # >=2 = '7-8 hours' or more, 2 = 'Healthy'
+    if mapped_data['Sleep Duration'] >= 2 and mapped_data['Dietary Habits'] == 2:
         bonus += 0.5
     
-    if mapped_data['Academic Pressure'] <= 2.0 and prob_dep < 0.3:
+    if mapped_data['Academic Pressure'] <= 2 and prob_dep < 0.30:
         bonus += 0.3
     
-    # Apply penalty and bonus with bounds
     final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
     
-    # 8. Create 5-feature dataframe for GMM with exact expected columns
-    # Extract scaled features from input_df
-    academic_pressure_scaled = input_df['Academic Pressure'].iloc[0]
-    study_satisfaction_scaled = input_df['Study Satisfaction'].iloc[0]
-    sleep_duration_scaled = input_df['Sleep Duration'].iloc[0]
-    financial_stress_scaled = input_df['Financial Stress'].iloc[0]
+    # 8. Clinical Override Rule (Luât ghi dè lâm sàng)
+    # 1. LÕP GIÁP BÃO VÊ TUYÊT DÕI
+    if mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
+        cluster_name = "Cân báng lý tuóng"
+    # 2. RÀ SOÁT CHIÊN BINH
+    elif mapped_data['Academic Pressure'] >= 4 and mapped_data['Study Satisfaction'] >= 3:
+        cluster_name = "Chiên binh kiêt súc"
+    # 3. RÀ SOÁT MÁT DINH HUÓNG
+    elif mapped_data['Study Satisfaction'] <= 2.5 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3:
+        cluster_name = "Mát dinh huóng"
+    # 4. RÀ SOÁT GÁNH NÁNG BÙA VÂY
+    elif (mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4)) or prob_sui >= 0.5 or prob_dep >= 0.6:
+        cluster_name = "Gánh náng bùa vây"
+    # 5. PHÀN CÒN LÁI
+    else:
+        cluster_name = "Cân báng lý tuóng"
     
-    # Scale final_cgpa using dummy_df trick
-    cgpa_dummy = pd.DataFrame(np.zeros((1, len(scale_cols)), dtype=float), columns=scale_cols)
-    cgpa_dummy.loc[0, 'CGPA'] = final_cgpa
-    cgpa_scaled = scaler.transform(cgpa_dummy)[0, scale_cols.index('CGPA')]
-    
-    # Create gmm_features with exactly 5 columns in correct order
-    gmm_features = pd.DataFrame([[
-        academic_pressure_scaled,  # Academic Pressure
-        cgpa_scaled,               # CGPA
-        study_satisfaction_scaled,   # Study Satisfaction
-        sleep_duration_scaled,       # Sleep Duration
-        financial_stress_scaled      # Financial Stress
-    ]], columns=['Academic Pressure', 'CGPA', 'Study Satisfaction', 'Sleep Duration', 'Financial Stress'])
-    
-    # 9. Run GMM prediction
-    cluster_probs = gmm.predict_proba(gmm_features)
-    dominant_id = cluster_probs.argmax()
-    
-    # 10. Fetch cluster information
-    cluster_info = cluster_dict[dominant_id]
-    cluster_name = cluster_info['name']
-    
-    # 11. Apply Clinical Override for Group Clusters
-    if prob_sui >= 0.5 or prob_dep >= 0.6:
-        if cluster_name == "Cân bằng lý tưởng":
-            cluster_name = "Gánh nặng bủa vây"
-    
-    if final_cgpa < 6.0 and mapped_data['Study Satisfaction'] <= 2.5:
-        if cluster_name == "Cân bằng lý tưởng":
-            cluster_name = "Mất định hướng"
+    # 9. Map cluster_name back to cluster_dict advice
+    cluster_advice = ""
+    for cluster_info in cluster_dict.values():
+        if cluster_info['name'] == cluster_name:
+            cluster_advice = cluster_info['advice']
+            break
     
     # 12. Return structured JSON response
     return jsonify({
@@ -170,7 +155,7 @@ def predict():
         "depression_risk": prob_dep,
         "suicide_risk": prob_sui,
         "cluster_name": cluster_name,
-        "cluster_advice": cluster_info['advice'],
+        "cluster_advice": cluster_advice,
         "cluster_mess": "Generate a short summary based on risks"
     })
 
