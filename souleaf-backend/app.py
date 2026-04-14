@@ -52,15 +52,15 @@ def predict():
     
     mapped_data = {
         'Gender': gender_map.get(data['gender'], 0),
-        'Age': int(data['age']),
+        'Age': float(data['age']),
         'Degree': degree_formatted,
         'Profession': profession_formatted,
         'Sleep Duration': sleep_map.get(data['sleepDuration'], 0),
         'Dietary Habits': dietary_map.get(data['dietaryHabits'], 0),
-        'Financial Stress': int(data['financialStress']),
+        'Financial Stress': float(data['financialStress']),
         'Family History of Mental Illness': family_map.get(data['familyHistory'], 0),
-        'Academic Pressure': int(data['academicPressure']),
-        'Study Satisfaction': int(data['studySatisfaction'])
+        'Academic Pressure': float(data['academicPressure']),
+        'Study Satisfaction': float(data['studySatisfaction'])
     }
     
     # 3. Tạo input_df

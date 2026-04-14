@@ -23,6 +23,8 @@ function Quiz() {
     studySatisfaction: 5
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -32,6 +34,7 @@ function Quiz() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
         const response = await fetch('https://souleaf.onrender.com/predict', {
             method: 'POST',
@@ -44,6 +47,8 @@ function Quiz() {
         }
     } catch (error) {
         console.error("Lô khi kêtnôi vói AI:", error);
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -230,14 +235,15 @@ function Quiz() {
             {/* Financial Stress */}
             <div className="mb-6">
               <label className="block text-lg font-medium text-gray-700 mb-3">
-                Áp lực tiền bạc*: <span className="text-[#247D3C] font-semibold">{formData.financialStress}/5</span>
+                Áp lực tiền bạc*: <span className="text-[#247D3C] font-semibold">{Number(formData.financialStress).toFixed(1)}/5</span>
               </label>
               <input
                 type="range"
                 min="1"
                 max="5"
+                step="0.1"
                 value={formData.financialStress}
-                onChange={(e) => handleInputChange('financialStress', parseInt(e.target.value))}
+                onChange={(e) => handleInputChange('financialStress', parseFloat(e.target.value))}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-300"
               />
               <div className="flex justify-between text-sm text-gray-500 mt-1">
@@ -289,14 +295,15 @@ function Quiz() {
             {/* Academic/Work Pressure */}
             <div className="mb-6">
               <label className="block text-lg font-medium text-gray-700 mb-3">
-                Mức độ áp lực học tập/công việc*: <span className="text-[#247D3C] font-semibold">{formData.academicPressure}/5</span>
+                Mức độ áp lực học tập/công việc*: <span className="text-[#247D3C] font-semibold">{Number(formData.academicPressure).toFixed(1)}/5</span>
               </label>
               <input
                 type="range"
                 min="1"
                 max="5"
+                step="0.1"
                 value={formData.academicPressure}
-                onChange={(e) => handleInputChange('academicPressure', parseInt(e.target.value))}
+                onChange={(e) => handleInputChange('academicPressure', parseFloat(e.target.value))}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-300"
               />
               <div className="flex justify-between text-sm text-gray-500 mt-1">
@@ -315,14 +322,15 @@ function Quiz() {
             {/* Study/Job Satisfaction */}
             <div className="mb-6">
               <label className="block text-lg font-medium text-gray-700 mb-3">
-                Sự hài lòng với việc học/làm*: <span className="text-[#247D3C] font-semibold">{formData.studySatisfaction}/5</span>
+                Sự hài lòng với việc học/làm*: <span className="text-[#247D3C] font-semibold">{Number(formData.studySatisfaction).toFixed(1)}/5</span>
               </label>
               <input
                 type="range"
                 min="1"
                 max="5"
+                step="0.1"
                 value={formData.studySatisfaction}
-                onChange={(e) => handleInputChange('studySatisfaction', parseInt(e.target.value))}
+                onChange={(e) => handleInputChange('studySatisfaction', parseFloat(e.target.value))}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-300"
               />
               <div className="flex justify-between text-sm text-gray-500 mt-1">
@@ -343,10 +351,18 @@ function Quiz() {
           <div className="text-center pt-8">
             <button
               type="submit"
-              className="bg-[#2A8B44] hover:bg-[#237538] text-white text-xl font-semibold px-12 py-4 rounded-md transition-colors duration-200"
+              disabled={isLoading}
+              className={`bg-[#2A8B44] hover:bg-[#237538] text-white text-xl font-semibold px-12 py-4 rounded-md transition-colors duration-200 ${
+                isLoading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
               Nộp câu trả lời
             </button>
+            {isLoading && (
+              <p className="mt-4 text-[#247D3C] font-medium text-center animate-pulse">
+                Hệ thống đang phân tích kết quả, bạn chờ một chút nhé...
+              </p>
+            )}
           </div>
         </form>
       </div>
