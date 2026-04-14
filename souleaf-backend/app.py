@@ -21,15 +21,15 @@ scaler = master_system['scaler']
 encoders = master_system['encoders']
 cluster_dict = master_system['cluster_dict']
 
-# Mapping dictionaries for categorical variables (handle both lowercase and Title Case)
+# Mapping dictionaries for categorical variables (Synchronized with Jupyter Notebook LabelEncoders)
 gender_map = {
-    'Nam': 0, 'nam': 0, 'Male': 0, 'male': 0,
-    'Nữ': 1, 'nữ': 1, 'Female': 1, 'female': 1,
-    'Khác': 2, 'khác': 2, 'Other': 2, 'other': 2
+    'Nam': 1, 'nam': 1, 'Male': 1, 'male': 1,
+    'Nữ': 0, 'nữ': 0, 'Female': 0, 'female': 0,
+    'Khác': 1, 'khác': 1, 'Other': 1, 'other': 1
 }
-sleep_map = {'less-5': 0, '5-6': 1, '7-8': 2, 'more-8': 3, 'other': 4}
-dietary_map = {'healthy': 0, 'average': 1, 'unhealthy': 2, 'other': 3}
-family_map = {'yes': 0, 'no': 1, 'unsure': 2}
+sleep_map = {'less-5': 0, '5-6': 1, '7-8': 2, 'more-8': 3, 'other': 1}
+dietary_map = {'healthy': 2, 'average': 1, 'unhealthy': 0, 'other': 1}
+family_map = {'yes': 1, 'no': 0, 'unsure': 0}
 
 def safe_transform(encoder, values):
     """Safely transform categorical values with fallback to 0 for unseen labels"""
