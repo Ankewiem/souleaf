@@ -97,16 +97,32 @@ def predict():
     prob_dep = log_dep.predict_proba(input_df)[0][1]  # Probability of depression
     prob_sui = log_sui.predict_proba(input_df)[0][1]  # Probability of suicide
     
-    # 7. Apply penalty logic to calculate final_cgpa
-    penalty = 0
-    if prob_dep > 0.7:
-        penalty += 0.5
-    if prob_sui > 0.3:
-        penalty += 0.3
-    if pred_burnout > 0.6:
-        penalty += 0.2
+    # 7. Apply CGPA Penalty/Bonus Guardrails
+    penalty = 0.0
+    bonus = 0.0
     
-    final_cgpa = max(0.0, pred_cgpa_raw - penalty)
+    # Penalties
+    if mapped_data['Study Satisfaction'] <= 2.0:
+        penalty += 1.5
+    
+    if prob_dep > 0.5 or pred_burnout > 70.0:
+        penalty += 1.0
+    
+    if mapped_data['Sleep Duration'] == 0 or mapped_data['Dietary Habits'] == 0:  # 0 = 'Less than 5 hours' or 'Unhealthy'
+        penalty += 0.5
+    
+    # Bonuses
+    if mapped_data['Study Satisfaction'] >= 4.0:
+        bonus += 0.8
+    
+    if mapped_data['Sleep Duration'] >= 2 and mapped_data['Dietary Habits'] == 2:  # >=2 = '7-8 hours' or more, 2 = 'Healthy'
+        bonus += 0.5
+    
+    if mapped_data['Academic Pressure'] <= 2.0 and prob_dep < 0.3:
+        bonus += 0.3
+    
+    # Apply penalty and bonus with bounds
+    final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
     
     # 8. Create 5-feature dataframe for GMM with exact expected columns
     # Extract scaled features from input_df
@@ -135,15 +151,25 @@ def predict():
     
     # 10. Fetch cluster information
     cluster_info = cluster_dict[dominant_id]
+    cluster_name = cluster_info['name']
     
-    # 11. Return structured JSON response
+    # 11. Apply Clinical Override for Group Clusters
+    if prob_sui >= 0.5 or prob_dep >= 0.6:
+        if cluster_name == "Cân bằng lý tưởng":
+            cluster_name = "Gánh nặng bủa vây"
+    
+    if final_cgpa < 6.0 and mapped_data['Study Satisfaction'] <= 2.5:
+        if cluster_name == "Cân bằng lý tưởng":
+            cluster_name = "Mất định hướng"
+    
+    # 12. Return structured JSON response
     return jsonify({
         "status": "success",
         "cgpa": final_cgpa,
         "burnout_index": pred_burnout,
         "depression_risk": prob_dep,
         "suicide_risk": prob_sui,
-        "cluster_name": cluster_info['name'],
+        "cluster_name": cluster_name,
         "cluster_advice": cluster_info['advice'],
         "cluster_mess": "Generate a short summary based on risks"
     })
