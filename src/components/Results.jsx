@@ -87,11 +87,19 @@ export default function Results() {
     );
   }
 
-  // Safe evaluation of current group with Unicode normalization
-  const rawClusterName = result?.cluster_name || '';
-  // Normalize Unicode and trim spaces to ensure exact string matching
-  const cleanClusterName = rawClusterName.trim().normalize('NFC');
-  const currentGroup = groupContent[cleanClusterName] || groupContent['Cân bằng lý tưởng'];
+  // Safe evaluation of current group with robust substring matching
+  const rawClusterName = String(result?.cluster_name || '');
+  let matchedKey = 'Cân bằng lý tưởng'; // Default fallback
+
+  if (rawClusterName.includes('Chiến binh')) {
+    matchedKey = 'Chiến binh kiệt sức';
+  } else if (rawClusterName.includes('Gánh nặng')) {
+    matchedKey = 'Gánh nặng bủa vây';
+  } else if (rawClusterName.includes('Mất định hướng')) {
+    matchedKey = 'Mất định hướng';
+  }
+
+  const currentGroup = groupContent[matchedKey];
 
   const burnoutValue = burnoutDisplay(result.burnout_index);
   const cgpaValue = parseFloat(result.cgpa).toFixed(1);
@@ -232,9 +240,6 @@ export default function Results() {
             <div className="border-t border-[rgba(0,0,0,0.15)]" />
 
             <div className="flex flex-col gap-4 pr-48">
-              <div className="text-[12px] text-gray-400 font-mono mb-1">
-                Debug Backend: [{rawClusterName}]
-              </div>
               {/* Title */}
               <p className="text-[#020202] font-semibold text-[20px] md:text-[26px]">
                 {currentGroup.title}
