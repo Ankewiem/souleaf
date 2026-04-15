@@ -46,12 +46,28 @@ export default function Results() {
   // Define risk threshold logic
   const isHighRisk = result?.depression_risk >= 0.5;
   
-  // Group advice mapping object
-  const groupAdviceMap = {
-    'Chiến binh kiệt sức': 'Hệ thống ghi nhận cường độ làm việc và áp lực ép của bạn. Bạn đang vắt kiệt bản thân. Hãy ưu tiên ngủ ngay!',
-    'Cân bằng lý tưởng': 'Bạn tìm thấy điểm ngọt giữa việc học và sống. Hãy duy trì thói quen hiện tại.',
-    'Gánh nặng bủa vây': 'Áp lực học tập và tài chính của bạn đang rất lớn. Dù cố gắng giữ nếp sống, nhưng bạn cần người san sẻ. Hãy kết nối với các quỹ hỗ trợ sinh viên ngay.',
-    'Mất định hướng': 'Áp lực của bạn không cao, nhưng bạn lại thiếu ngủ và chán nản. Hãy bước ra ngoài, tham gia ngoại khóa để tìm lại động lực sống.'
+  // Group content mapping object
+  const groupContent = {
+    'Chiến binh kiệt sức': {
+      title: 'Chiến binh kiệt sức',
+      message: 'Bạn là một người cầu toàn và có thành tích xuất sắc, nhưng bạn đang trả giá bằng sức khỏe tinh thần. Đừng để thành công đi kèm với sự kiệt sức nhé.',
+      advice: 'Học cách nói "Không" với những việc chưa cần thiết không phải là bỏ cuộc, mà là cách để bạn tập trung cho những điều quan trọng nhất. Đêm nay, hãy ưu tiên cho một giấc ngủ trọn vẹn thay vì cố thức thêm vài tiếng. Bạn xứng đáng được nghỉ ngơi.'
+    },
+    'Cân bằng lý tưởng': {
+      title: 'Cân bằng lý tưởng',
+      message: 'Bạn đã tìm được "điểm ngọt" giữa việc học và cuộc sống. Đây là nhóm có sức khỏe tâm thần ổn định nhất trong cộng đồng.',
+      advice: 'Duy trì được sự cân bằng này là một kỹ năng tuyệt vời. Đừng quên rằng sự ổn định quan trọng hơn sự bứt phá nhất thời. Khi bạn đã làm chủ được thời gian, hãy thử mời lòng chia sẻ kinh nghiệm hoặc truyền năng lượng tích cực này cho bạn bè xung quanh nhé. Sự kết nối sẽ giúp niềm vui học tập của bạn nhân đôi.'
+    },
+    'Gánh nặng bủa vây': {
+      title: 'Gánh nặng bủa vây',
+      message: 'AI nhận thấy bạn đang phải đối mặt với quá nhiều áp lực từ nhiều phía cùng lúc. Bạn không cô đơn, có 20% sinh viên trong hệ thống cũng đang ở trạng thái giống bạn.',
+      advice: 'Những gì bạn đang trải qua thực sự rất nặng nề. Đừng cố gắng gánh một mình mọi thứ vượt quá khả năng chịu đựng. Tìm kiếm sự giúp đỡ là một hành động dũng cảm, không phải yếu đuối. Chúng mình luôn ở đây để kết nối bạn với những nguồn lực hỗ trợ tốt nhất.'
+    },
+    'Mất định hướng': {
+      title: 'Mất định hướng',
+      message: 'Sự chán nản kéo dài có thể là tín hiệu cho thấy bạn đang đi chệch khỏi đam mê của mình.',
+      advice: 'Nếu việc học chỉ còn là áp lực mà không có niềm vui, hãy dừng lại một chút để lắng nghe bản thân. Có thể bạn chưa tìm đúng phương pháp hoặc môi trường phù hợp. Đừng ép mình đi tiếp một con đường không thuộc về bạn, hãy thử khám phá những cơ hội mới để tìm lại sự hứng khởi.'
+    }
   };
 
   // If navigated directly without data
@@ -77,6 +93,8 @@ export default function Results() {
   const suicidePct = pct(result.suicide_risk);
   const hasDepression = result.depression_risk >= 0.2;
   const hasSuicideRisk = result.suicide_risk >= 0.2;
+
+  const currentGroup = groupContent[result.cluster_name] || groupContent['Cân báng lý tuóng'];
 
   return (
     <div className="min-h-screen bg-[#EBFBEA] pt-[75px]">
@@ -197,7 +215,7 @@ export default function Results() {
                 </div>
               )}
             </div>
-            <RiskCircle label="tỷ lê rủi ro" value={suicidePct} />
+            <RiskCircle label="tỷ lệ rủi ro" value={suicidePct} />
           </div>
         </div>
 
@@ -211,7 +229,7 @@ export default function Results() {
 
             <div className="flex flex-col gap-4 pr-48">
               <p className="text-[#020202] font-semibold text-[20px] md:text-[26px]">
-                {result.cluster_name}
+                {currentGroup.title}
               </p>
               
               <div className="flex flex-col gap-3">
@@ -219,13 +237,7 @@ export default function Results() {
                   Thông điệp:
                 </p>
                 <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
-                  {result.cluster_name === 'Chiến binh kiệt sức' ? 
-                   'Bạn là một người cầu toàn và có thành tích xuất sắc, nhưng bạn đang trả giá bằng sức khỏe tinh thần. Đừng để thành công đi kèm với sự kiệt sức nhé.' :
-                   result.cluster_name === 'Cân bằng lý tưởng' ? 
-                   'Bạn đã tìm được "điểm ngọt" giữa việc học và cuộc sống. Đây là nhóm có sức khỏe tâm thần ổn định nhất trong cộng đồng.' :
-                   result.cluster_name === 'Gánh nặng bủa vây' ? 
-                   'AI nhận thấy bạn đang phải đối mặt với quá nhiều áp lực từ nhiều phía cùng lúc. Bạn không cô đơn, có 20% sinh viên trong hệ thống cũng đang ở trạng thái giống bạn.' :
-                   'Sự chán nản kéo dài có thể là tín hiệu cho thấy bạn đang đi chệch khỏi đam mê của mình.'}
+                  {currentGroup.message}
                 </p>
               </div>
               
@@ -234,13 +246,7 @@ export default function Results() {
                   Lời khuyên:
                 </p>
                 <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
-                  {result.cluster_name === 'Chiến binh kiệt sức' ? 
-                   'Học cách nói "Không" với những việc chưa cần thiết không phải là bỏ cuộc, mà là cách để bạn tập trung cho những điều quan trọng nhất. Đêm nay, hãy ưu tiên cho một giấc ngủ trọn vẹn thay vì cố thức thêm vài tiếng. Bạn xứng đáng được nghỉ ngơi.' :
-                   result.cluster_name === 'Cân bằng lý tưởng' ? 
-                   'Duy trì được sự cân bằng này là một kỹ năng tuyệt vời. Đừng quên rằng sự ổn định quan trọng hơn sự bứt phá nhất thời. Khi bạn đã làm chủ được thời gian, hãy thử mời lòng chia sẻ kinh nghiệm hoặc truyền năng lượng tích cực này cho bạn bè xung quanh nhé. Sự kết nối sẽ giúp niềm vui học tập của bạn nhân đôi.' :
-                   result.cluster_name === 'Gánh nặng bủa vây' ? 
-                   'Những gì bạn đang trải qua thực sự rất nặng nề. Đừng cố gắng gánh một mình mọi thứ vượt quá khả năng chịu đựng. Tìm kiếm sự giúp đỡ là một hành động dũng cảm, không phải yếu đuối. Chúng mình luôn ở đây để kết nối bạn với những nguồn lực hỗ trợ tốt nhất.' :
-                   'Nếu việc học chỉ còn là áp lực mà không có niềm vui, hãy dừng lại một chút để lắng nghe bản thân. Có thể bạn chưa tìm đúng phương pháp hoặc môi trường phù hợp. Đừng ép mình đi tiếp một con đường không thuộc về bạn, hãy thử khám phá những cơ hội mới để tìm lại sự hứng khởi.'}
+                  {currentGroup.advice}
                 </p>
               </div>
             </div>
