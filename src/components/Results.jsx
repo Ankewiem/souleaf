@@ -89,13 +89,16 @@ export default function Results() {
 
   // Safe evaluation of current group with robust substring matching
   const rawClusterName = String(result?.cluster_name || '');
+  // Normalize Unicode and convert to lowercase to completely avoid encoding/case issues
+  const safeName = rawClusterName.normalize('NFC').toLowerCase();
+
   let matchedKey = 'Cân bằng lý tưởng'; // Default fallback
 
-  if (rawClusterName.includes('Chiến binh')) {
+  if (safeName.includes('chiến binh')) {
     matchedKey = 'Chiến binh kiệt sức';
-  } else if (rawClusterName.includes('Gánh nặng')) {
+  } else if (safeName.includes('gánh nặng')) {
     matchedKey = 'Gánh nặng bủa vây';
-  } else if (rawClusterName.includes('Mất định hướng')) {
+  } else if (safeName.includes('mất định hướng')) {
     matchedKey = 'Mất định hướng';
   }
 
