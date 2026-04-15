@@ -123,22 +123,22 @@ def predict():
     
     final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
     
-    # 8. Clinical Override Rule (Luât ghi dè lâm sàng)
-    # 1. LÕP GIÁP BÃO VÊ TUYÊT DÕI
+    # 8. Clinical Override Rule (Luật ghi đè lâm sàng)
+    # 1. LỚP GIÁP BẢO VỆ TUYỆT ĐỐI
     if mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
-        cluster_name = "Cân báng lý tuóng"
-    # 2. RÀ SOÁT CHIÊN BINH
+        cluster_name = "Cân bằng lý tưởng"
+    # 2. RÀ SOÁT CHIẾN BINH
     elif mapped_data['Academic Pressure'] >= 4 and mapped_data['Study Satisfaction'] >= 3:
-        cluster_name = "Chiên binh kiêt súc"
-    # 3. RÀ SOÁT MÁT DINH HUÓNG
+        cluster_name = "Chiến binh kiệt sức"
+    # 3. RÀ SOÁT MẤT ĐỊNH HƯỚNG
     elif mapped_data['Study Satisfaction'] <= 2.5 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3:
-        cluster_name = "Mát dinh huóng"
-    # 4. RÀ SOÁT GÁNH NÁNG BÙA VÂY
+        cluster_name = "Mất định hướng"
+    # 4. RÀ SOÁT GÁNH NẶNG BỦA VÂY
     elif (mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4)) or prob_sui >= 0.5 or prob_dep >= 0.6:
-        cluster_name = "Gánh náng bùa vây"
-    # 5. PHÀN CÒN LÁI
+        cluster_name = "Gánh nặng bủa vây"
+    # 5. PHẦN CÒN LẠI
     else:
-        cluster_name = "Cân báng lý tuóng"
+        cluster_name = "Cân bằng lý tưởng"
     
     # 9. Map cluster_name back to cluster_dict advice
     cluster_advice = ""
