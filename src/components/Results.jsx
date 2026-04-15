@@ -55,13 +55,13 @@ export default function Results() {
     },
     'Cân bằng lý tưởng': {
       title: 'Cân bằng lý tưởng',
-      message: 'Bạn đã tìm được "điểm ngọt" giữa việc học và cuộc sống. Đây là nhóm có sức khỏe tâm thần ổn định nhất trong cộng đồng.',
-      advice: 'Duy trì được sự cân bằng này là một kỹ năng tuyệt vời. Đừng quên rằng sự ổn định quan trọng hơn sự bứt phá nhất thời. Khi bạn đã làm chủ được thời gian, hãy thử mời lòng chia sẻ kinh nghiệm hoặc truyền năng lượng tích cực này cho bạn bè xung quanh nhé. Sự kết nối sẽ giúp niềm vui học tập của bạn nhân đôi.'
+      message: 'Bạn đã tìm thấy "điểm ngọt" giữa việc học và cuộc sống. Đây là nhóm có sức khỏe tâm thần ổn định nhất trong cộng đồng.',
+      advice: 'Duy trì được sự cân bằng này là một kỹ năng tuyệt vời. Đừng quên rằng phong độ ổn định quan trọng hơn sự bứt phá nhất thời. Khi bạn đã làm chủ được thời gian, hãy thử mở lòng chia sẻ kinh nghiệm hoặc truyền năng lượng tích cực này cho bạn bè xung quanh nhé. Sự kết nối sẽ giúp niềm vui học tập của bạn nhân đôi.'
     },
     'Gánh nặng bủa vây': {
       title: 'Gánh nặng bủa vây',
-      message: 'AI nhận thấy bạn đang phải đối mặt với quá nhiều áp lực từ nhiều phía cùng lúc. Bạn không cô đơn, có 20% sinh viên trong hệ thống cũng đang ở trạng thái giống bạn.',
-      advice: 'Những gì bạn đang trải qua thực sự rất nặng nề. Đừng cố gắng gánh một mình mọi thứ vượt quá khả năng chịu đựng. Tìm kiếm sự giúp đỡ là một hành động dũng cảm, không phải yếu đuối. Chúng mình luôn ở đây để kết nối bạn với những nguồn lực hỗ trợ tốt nhất.'
+      message: 'AI nhận thấy bạn đang phải đối mặt với quá nhiều áp lực từ nhiều phía cùng lúc. Bạn không cô đơn, có 20% sinh viên trong hệ thống cũng đang ở tình trạng giống bạn.',
+      advice: 'Những gì bạn đang trải qua thực sự rất nặng nề. Đừng cố gồng gánh một mình khi mọi thứ vượt quá khả năng chịu đựng. Tìm kiếm sự giúp đỡ là một hành động dũng cảm, không phải yếu đuối. Chúng mình luôn ở đây để kết nối bạn với những nguồn lực hỗ trợ tốt nhất.'
     },
     'Mất định hướng': {
       title: 'Mất định hướng',
@@ -87,14 +87,15 @@ export default function Results() {
     );
   }
 
+  // Safe evaluation of current group
+  const currentGroup = groupContent[result?.cluster_name] || groupContent['Cân bằng lý tưởng'];
+
   const burnoutValue = burnoutDisplay(result.burnout_index);
   const cgpaValue = parseFloat(result.cgpa).toFixed(1);
   const depressionPct = pct(result.depression_risk);
   const suicidePct = pct(result.suicide_risk);
   const hasDepression = result.depression_risk >= 0.2;
   const hasSuicideRisk = result.suicide_risk >= 0.2;
-
-  const currentGroup = groupContent[result.cluster_name] || groupContent['Cân báng lý tuóng'];
 
   return (
     <div className="min-h-screen bg-[#EBFBEA] pt-[75px]">
@@ -215,7 +216,7 @@ export default function Results() {
                 </div>
               )}
             </div>
-            <RiskCircle label="tỷ lệ rủi ro" value={suicidePct} />
+            <RiskCircle label="tỷ lê rủi ro" value={suicidePct} />
           </div>
         </div>
 
@@ -228,6 +229,7 @@ export default function Results() {
             <div className="border-t border-[rgba(0,0,0,0.15)]" />
 
             <div className="flex flex-col gap-4 pr-48">
+              {/* Title */}
               <p className="text-[#020202] font-semibold text-[20px] md:text-[26px]">
                 {currentGroup.title}
               </p>
@@ -236,6 +238,7 @@ export default function Results() {
                 <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
                   Thông điệp:
                 </p>
+                {/* Thông điệp */}
                 <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
                   {currentGroup.message}
                 </p>
@@ -245,6 +248,7 @@ export default function Results() {
                 <p className="text-[#247D3C] font-semibold text-[16px] md:text-[18px]">
                   Lời khuyên:
                 </p>
+                {/* Lời khuyên */}
                 <p className="text-[#020202] font-medium text-[15px] md:text-[17px] leading-snug">
                   {currentGroup.advice}
                 </p>
