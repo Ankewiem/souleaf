@@ -110,7 +110,7 @@ def predict():
         input_df['Financial Stress'].iloc[0]
     ]], columns=['Academic Pressure', 'CGPA', 'Study Satisfaction', 'Sleep Duration', 'Financial Stress'])
     
-    cluster_prediction = gmm.predict(gmm_features)[0]
+    cluster_prediction = int(gmm.predict(gmm_features)[0])
     base_ai_cluster_name = cluster_dict[cluster_prediction]['name']
 
     # 7. Apply CGPA Penalty/Bonus Guardrails
@@ -128,24 +128,47 @@ def predict():
     final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
 
     # 8. Clinical Override Guardrails (5 Layers)
+    # Store the original GMM prediction
+    base_ai_cluster_name = cluster_name 
+
+    # Tầng 1: Báo vệ tuyệt đối (Học bá hạng nhất)
     if mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
         cluster_name = "Cân bằng lý tưởng"
         prob_dep = 0.15
         prob_sui = 0.12
         pred_burnout = 18.0
+
+    # Tầng 1.2: Bảo vệ chiến binh (Vá lại AI hóa loạn)
+    elif mapped_data['Academic Pressure'] >= 4 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
+        cluster_name = "Chiến binh kiệt sức"
+        # Áp rủi ro sinh mạng xuống mức báo động
+        prob_dep = min(prob_dep, 0.40)
+        prob_sui = min(prob_sui, 0.25)
+
+    # Tầng 1.5: Báo vệ người bình thường
     elif mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 3 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3 and mapped_data['Family History of Mental Illness'] == 0:
         cluster_name = "Cân bằng lý tưởng"
         prob_dep = 0.20
         prob_sui = 0.15
         pred_burnout = 25.0
+
+    # Tầng 1.8: Cầu dao y tế khẩn cấp
     elif prob_sui >= 0.50 or prob_dep >= 0.60:
-        cluster_name = "Gánh nặng bủa vây"
+        cluster_name = "Gánh nặng bão vây"
+
+    # Tầng 2: Rà soát chiến binh
     elif mapped_data['Academic Pressure'] >= 4 and mapped_data['Study Satisfaction'] >= 3:
         cluster_name = "Chiến binh kiệt sức"
+
+    # Tầng 3: Rà soát mặt ảnh hưởng
     elif mapped_data['Study Satisfaction'] <= 2.5 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3:
-        cluster_name = "Mất định hướng"
+        cluster_name = "Mặt ảnh hưởng"
+
+    # Tầng 4: Rà soát áp lực bão vây
     elif mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4):
-        cluster_name = "Gánh nặng bủa vây"
+        cluster_name = "Gánh nặng bão vây"
+
+    # Tầng 5: Trả quyền cho GMM
     else:
         cluster_name = base_ai_cluster_name
         
@@ -158,10 +181,10 @@ def predict():
     
     return jsonify({
         "status": "success",
-        "cgpa": final_cgpa,
-        "burnout_index": pred_burnout,
-        "depression_risk": prob_dep,
-        "suicide_risk": prob_sui,
+        "cgpa": float(final_cgpa),
+        "burnout_index": float(pred_burnout),
+        "depression_risk": float(prob_dep),
+        "suicide_risk": float(prob_sui),
         "cluster_name": cluster_name,
         "cluster_advice": cluster_advice,
         "cluster_mess": "Generate a short summary based on risks"
