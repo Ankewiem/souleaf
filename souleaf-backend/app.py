@@ -97,73 +97,58 @@ def predict():
     prob_dep = log_dep.predict_proba(input_df)[0][1]  # Probability of depression
     prob_sui = log_sui.predict_proba(input_df)[0][1]  # Probability of suicide
     
-    # Get original GMM cluster prediction
-    cluster_prediction = gmm.predict(input_df)[0]
-    cluster_name = list(cluster_dict.keys())[cluster_prediction]
+    # 6.5 Prepare 5-feature dataframe for GMM
+    cgpa_dummy = pd.DataFrame(np.zeros((1, len(scale_cols)), dtype=float), columns=scale_cols)
+    cgpa_dummy.loc[0, 'CGPA'] = pred_cgpa_raw
+    cgpa_scaled = scaler.transform(cgpa_dummy)[0, scale_cols.index('CGPA')]
     
+    gmm_features = pd.DataFrame([[
+        input_df['Academic Pressure'].iloc[0],
+        cgpa_scaled,
+        input_df['Study Satisfaction'].iloc[0],
+        input_df['Sleep Duration'].iloc[0],
+        input_df['Financial Stress'].iloc[0]
+    ]], columns=['Academic Pressure', 'CGPA', 'Study Satisfaction', 'Sleep Duration', 'Financial Stress'])
+    
+    cluster_prediction = gmm.predict(gmm_features)[0]
+    base_ai_cluster_name = cluster_dict[cluster_prediction]['name']
+
     # 7. Apply CGPA Penalty/Bonus Guardrails
     penalty = 0.0
     bonus = 0.0
     
-    # Penalties
-    if mapped_data['Study Satisfaction'] <= 2:
-        penalty += 1.5
+    if mapped_data['Study Satisfaction'] <= 2.0: penalty += 1.5
+    if prob_dep > 0.5 or pred_burnout > 70.0: penalty += 1.0
+    if mapped_data['Sleep Duration'] == 0 or mapped_data['Dietary Habits'] == 0: penalty += 0.5
     
-    if prob_dep > 0.5 or pred_burnout > 70.0:
-        penalty += 1.0
-    
-    if mapped_data['Sleep Duration'] == 0 or mapped_data['Dietary Habits'] == 0:
-        penalty += 0.5
-    
-    # Bonuses
-    if mapped_data['Study Satisfaction'] >= 4:
-        bonus += 0.8
-    
-    if mapped_data['Sleep Duration'] >= 2 and mapped_data['Dietary Habits'] == 2:
-        bonus += 0.5
-    
-    if mapped_data['Academic Pressure'] <= 2 and prob_dep < 0.30:
-        bonus += 0.3
+    if mapped_data['Study Satisfaction'] >= 4.0: bonus += 0.8
+    if mapped_data['Sleep Duration'] >= 2 and mapped_data['Dietary Habits'] == 2: bonus += 0.5
+    if mapped_data['Academic Pressure'] <= 2.0 and prob_dep < 0.30: bonus += 0.3
     
     final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
-    
-    # Store the original GMM prediction
-    base_ai_cluster_name = cluster_name 
 
-    # Tâng 1: Bão vê tuyêt doi (Hoc bá)
+    # 8. Clinical Override Guardrails (5 Layers)
     if mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
-        cluster_name = "Cân báng lý tuóng"
+        cluster_name = "Cân bằng lý tưởng"
         prob_dep = 0.15
         prob_sui = 0.12
         pred_burnout = 18.0
-
-    # Tâng 1.5: Bão vê nguòi bình thuòng
     elif mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 3 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3 and mapped_data['Family History of Mental Illness'] == 0:
-        cluster_name = "Cân báng lý tuóng"
+        cluster_name = "Cân bằng lý tưởng"
         prob_dep = 0.20
         prob_sui = 0.15
         pred_burnout = 25.0
-
-    # Tâng 1.8: Câu dao y te khân câp
     elif prob_sui >= 0.50 or prob_dep >= 0.60:
-        cluster_name = "Gánh náng bùa vây"
-
-    # Tâng 2: Rà soát Chiên binh
+        cluster_name = "Gánh nặng bủa vây"
     elif mapped_data['Academic Pressure'] >= 4 and mapped_data['Study Satisfaction'] >= 3:
-        cluster_name = "Chiên binh kiêt súc"
-
-    # Tâng 3: Rà soát Mát dinh huóng
+        cluster_name = "Chiến binh kiệt sức"
     elif mapped_data['Study Satisfaction'] <= 2.5 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3:
-        cluster_name = "Mát dinh huóng"
-
-    # Tâng 4: Rà soát Áp lùc bùa vây
+        cluster_name = "Mất định hướng"
     elif mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4):
-        cluster_name = "Gánh náng bùa vây"
-
-    # Tâng 5: Trà quyèn cho GMM
+        cluster_name = "Gánh nặng bủa vây"
     else:
         cluster_name = base_ai_cluster_name
-    
+        
     # 9. Map cluster_name back to cluster_dict advice
     cluster_advice = ""
     for cluster_info in cluster_dict.values():
@@ -171,7 +156,6 @@ def predict():
             cluster_advice = cluster_info['advice']
             break
     
-    # 12. Return structured JSON response
     return jsonify({
         "status": "success",
         "cgpa": final_cgpa,
