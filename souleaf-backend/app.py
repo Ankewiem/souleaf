@@ -128,8 +128,7 @@ def predict():
     final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
 
     # 8. Clinical Override Guardrails (5 Layers)
-    # Store the original GMM prediction
-    base_ai_cluster_name = cluster_name 
+    # Note: base_ai_cluster_name is already defined correctly in step 6.5
 
     # Tầng 1: Báo vệ tuyệt đối (Học bá hạng nhất)
     if mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
