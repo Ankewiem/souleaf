@@ -97,6 +97,10 @@ def predict():
     prob_dep = log_dep.predict_proba(input_df)[0][1]  # Probability of depression
     prob_sui = log_sui.predict_proba(input_df)[0][1]  # Probability of suicide
     
+    # Get original GMM cluster prediction
+    cluster_prediction = gmm.predict(input_df)[0]
+    cluster_name = list(cluster_dict.keys())[cluster_prediction]
+    
     # 7. Apply CGPA Penalty/Bonus Guardrails
     penalty = 0.0
     bonus = 0.0
@@ -123,34 +127,42 @@ def predict():
     
     final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
     
-    # 8. Clinical Override Rule (Luật ghi đề lâm sàng)
-    # 1. LỚP GIÁP BÃO VÊ TUYỆT ĐỐI (Chống AI đoán mò cho Học bá)
+    # Store the original GMM prediction
+    base_ai_cluster_name = cluster_name 
+
+    # Tâng 1: Bão vê tuyêt doi (Hoc bá)
     if mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
-        cluster_name = "Cân bằng lý tưởng"
-        prob_dep = 0.15  # Ép rủi ro trầm cảm về 15%
-        prob_sui = 0.12  # Ép rủi ro tự hại về 12%
+        cluster_name = "Cân báng lý tuóng"
+        prob_dep = 0.15
+        prob_sui = 0.12
+        pred_burnout = 18.0
 
-    # 1.5. LỚP GIÁP BÃO VÊ "NGƯỜI BÌNH THƯỜNG" (Vá lỗi AI quá nhạy cảm)
+    # Tâng 1.5: Bão vê nguòi bình thuòng
     elif mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 3 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3 and mapped_data['Family History of Mental Illness'] == 0:
-        cluster_name = "Cân bằng lý tưởng"
-        prob_dep = 0.20  # Ép rủi ro trầm cảm về 20%
-        prob_sui = 0.15  # Ép rủi ro tự hại về 15%
+        cluster_name = "Cân báng lý tuóng"
+        prob_dep = 0.20
+        prob_sui = 0.15
+        pred_burnout = 25.0
 
-    # 2. RÀ SOÁT CHIẾN BINH (Học bá liệu mang)
+    # Tâng 1.8: Câu dao y te khân câp
+    elif prob_sui >= 0.50 or prob_dep >= 0.60:
+        cluster_name = "Gánh náng bùa vây"
+
+    # Tâng 2: Rà soát Chiên binh
     elif mapped_data['Academic Pressure'] >= 4 and mapped_data['Study Satisfaction'] >= 3:
-        cluster_name = "Chiến binh kiệt sức"
+        cluster_name = "Chiên binh kiêt súc"
 
-    # 3. RÀ SOÁT MẤT DINH HƯỚNG (Nhóm buông xuôi)
+    # Tâng 3: Rà soát Mát dinh huóng
     elif mapped_data['Study Satisfaction'] <= 2.5 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3:
-        cluster_name = "Mất định hướng"
+        cluster_name = "Mát dinh huóng"
 
-    # 4. RÀ SOÁT GÁNH NÁNG BÙA VÂY (Lùi vét sinh mang & Áp lực bùa vây)
-    elif (mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4)) or prob_sui >= 0.50 or prob_dep >= 0.60:
-        cluster_name = "Gánh nặng bùa vây"
+    # Tâng 4: Rà soát Áp lùc bùa vây
+    elif mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4):
+        cluster_name = "Gánh náng bùa vây"
 
-    # 5. CÂN BẰNG LÝ TƯỞNG (Phần còn lại)
+    # Tâng 5: Trà quyèn cho GMM
     else:
-        cluster_name = "Cân bằng lý tưởng"
+        cluster_name = base_ai_cluster_name
     
     # 9. Map cluster_name back to cluster_dict advice
     cluster_advice = ""
