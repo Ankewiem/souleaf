@@ -123,20 +123,32 @@ def predict():
     
     final_cgpa = max(4.0, min(10.0, pred_cgpa_raw - penalty + bonus))
     
-    # 8. Clinical Override Rule (Luật ghi đè lâm sàng)
-    # 1. LỚP GIÁP BẢO VỆ TUYỆT ĐỐI
+    # 8. Clinical Override Rule (Luật ghi đề lâm sàng)
+    # 1. LỚP GIÁP BÃO VÊ TUYỆT ĐỐI (Chống AI đoán mò cho Học bá)
     if mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 4 and mapped_data['Family History of Mental Illness'] == 0 and mapped_data['Financial Stress'] <= 3:
         cluster_name = "Cân bằng lý tưởng"
-    # 2. RÀ SOÁT CHIẾN BINH
+        prob_dep = 0.15  # Ép rủi ro trầm cảm về 15%
+        prob_sui = 0.12  # Ép rủi ro tự hại về 12%
+
+    # 1.5. LỚP GIÁP BÃO VÊ "NGƯỜI BÌNH THƯỜNG" (Vá lỗi AI quá nhạy cảm)
+    elif mapped_data['Sleep Duration'] >= 2 and mapped_data['Study Satisfaction'] >= 3 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3 and mapped_data['Family History of Mental Illness'] == 0:
+        cluster_name = "Cân bằng lý tưởng"
+        prob_dep = 0.20  # Ép rủi ro trầm cảm về 20%
+        prob_sui = 0.15  # Ép rủi ro tự hại về 15%
+
+    # 2. RÀ SOÁT CHIẾN BINH (Học bá liệu mang)
     elif mapped_data['Academic Pressure'] >= 4 and mapped_data['Study Satisfaction'] >= 3:
         cluster_name = "Chiến binh kiệt sức"
-    # 3. RÀ SOÁT MẤT ĐỊNH HƯỚNG
+
+    # 3. RÀ SOÁT MẤT DINH HƯỚNG (Nhóm buông xuôi)
     elif mapped_data['Study Satisfaction'] <= 2.5 and mapped_data['Academic Pressure'] <= 3 and mapped_data['Financial Stress'] <= 3:
         cluster_name = "Mất định hướng"
-    # 4. RÀ SOÁT GÁNH NẶNG BỦA VÂY
-    elif (mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4)) or prob_sui >= 0.5 or prob_dep >= 0.6:
-        cluster_name = "Gánh nặng bủa vây"
-    # 5. PHẦN CÒN LẠI
+
+    # 4. RÀ SOÁT GÁNH NÁNG BÙA VÂY (Lùi vét sinh mang & Áp lực bùa vây)
+    elif (mapped_data['Study Satisfaction'] <= 2.5 and (mapped_data['Academic Pressure'] >= 4 or mapped_data['Financial Stress'] >= 4)) or prob_sui >= 0.50 or prob_dep >= 0.60:
+        cluster_name = "Gánh nặng bùa vây"
+
+    # 5. CÂN BẰNG LÝ TƯỞNG (Phần còn lại)
     else:
         cluster_name = "Cân bằng lý tưởng"
     

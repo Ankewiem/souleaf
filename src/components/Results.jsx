@@ -170,7 +170,7 @@ export default function Results() {
                    `Với phong độ hiện tại, bạn đang hướng tới mục tiêu ${Number(result.cgpa).toFixed(1)}. Mọi thứ đang rất thuận lợi, cứ duy trì trình độ này nhé!` :
                    result.cgpa >= 6.0 ? 
                    `Dự báo điểm số của bạn đang ở mức ${Number(result.cgpa).toFixed(1)}. Kết quả này khá ổn, nhưng nếu bớt chút áp lực và tập trung hơn, mình tin con số này sẽ còn bứt phá hơn nữa đấy.` :
-                   `Chú số tâm trạng đang kéo kết quả xuống con ${Number(result.cgpa).toFixed(1)}. Dừng quá lo lắng về con số, nhờ chuyên gia mình xử lý được áp lực lúc này, điểm số sẽ tự khác quay trở lại nồng cao thôi.`}
+                   `Chỉ số tâm trạng đang kéo kết quả dự kiến xuống còn ${Number(result.cgpa).toFixed(1)}. Đừng quá lo lắng về con số, nếu chúng mình xử lý được áp lực lúc này, điểm số sẽ tự khắc quay trở lại ngưỡng cao thôi.`}
                 </p>
               </div>
             </div>
