@@ -28,11 +28,13 @@ function ScoreCircle({ value, max, large = false }) {
   );
 }
 
-function RiskCircle({ label, value }) {
+function RiskCircle({ label, value, isDanger = false }) {
+  const bgColor = isDanger ? 'bg-[#D93843]' : 'bg-[#247D3C]';
+  
   return (
-    <div className="flex flex-col items-center justify-center rounded-full border-[4px] border-[#247D3C] bg-[#EBFBEA] w-[200px] h-[200px] md:w-[240px] md:h-[240px] flex-shrink-0">
-      <span className="text-[#247D3C] font-extrabold text-[13px] uppercase tracking-wide mb-1">{label}</span>
-      <span className="text-[#247D3C] font-extrabold text-[52px] md:text-[64px] leading-none">{value}%</span>
+    <div className={`flex flex-col items-center justify-center rounded-full ${bgColor} w-[200px] h-[200px] md:w-[240px] md:h-[240px] flex-shrink-0 shadow-lg transition-colors duration-300`}>
+      <span className="text-white font-extrabold text-[13px] uppercase tracking-wide mb-1 opacity-90">{label}</span>
+      <span className="text-white font-extrabold text-[52px] md:text-[64px] leading-none">{value}%</span>
     </div>
   );
 }
@@ -184,10 +186,10 @@ export default function Results() {
           {/* Depression section */}
           <div className="px-10 py-10 md:px-16 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-0 md:justify-between relative">
             <div className="flex flex-col gap-5 max-w-[580px] z-10">
-              <h2 className="text-green-800 font-semibold text-[32px] md:text-[44px] leading-tight">
+              <h2 className={`${hasDepression ? 'text-[#D93843]' : 'text-[#247D3C]'} font-semibold text-[32px] md:text-[44px] leading-tight transition-colors duration-300`}>
                 Bạn{' '}
-                <span className="text-green-900 font-bold">
-                  {result.depression_risk >= 0.5 ? 'CÓ' : 'KHÔNG CÓ'}
+                <span className="font-bold">
+                  {hasDepression ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
                 dấu hiệu trầm cảm
               </h2>
@@ -197,7 +199,7 @@ export default function Results() {
                   : 'Mình rất vui khi thấy các chỉ số tâm trạng của bạn đang ở ngưỡng an toàn. Hãy tiếp tục dành thời gian chăm sóc bản thân và duy trì những thói quen tích cực này nhé!'}
               </p>
             </div>
-            <RiskCircle label="tỷ lệ rủi ro" value={depressionPct} />
+            <RiskCircle label="tỷ lệ rủi ro" value={depressionPct} isDanger={hasDepression} />
           </div>
 
           {/* Divider */}
@@ -206,10 +208,10 @@ export default function Results() {
           {/* Self-harm section */}
           <div className="px-10 py-10 md:px-16 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-0 md:justify-between relative">
             <div className="flex flex-col gap-5 max-w-[580px] z-10">
-              <h2 className="text-green-800 font-semibold text-[32px] md:text-[44px] leading-tight">
+              <h2 className={`${hasSuicideRisk ? 'text-[#D93843]' : 'text-[#247D3C]'} font-semibold text-[32px] md:text-[44px] leading-tight transition-colors duration-300`}>
                 Bạn{' '}
-                <span className="text-green-900 font-bold">
-                  {result.suicide_risk >= 0.5 ? 'CÓ' : 'KHÔNG CÓ'}
+                <span className="font-bold">
+                  {hasSuicideRisk ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
                 nguy cơ tự hại
               </h2>
@@ -230,7 +232,7 @@ export default function Results() {
                 </div>
               )}
             </div>
-            <RiskCircle label="tỷ lê rủi ro" value={suicidePct} />
+            <RiskCircle label="tỷ lệ rủi ro" value={suicidePct} isDanger={hasSuicideRisk} />
           </div>
         </div>
 
