@@ -186,9 +186,9 @@ export default function Results() {
           {/* Depression section */}
           <div className="px-10 py-10 md:px-16 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-0 md:justify-between relative">
             <div className="flex flex-col gap-5 max-w-[580px] z-10">
-              <h2 className={`${hasDepression ? 'text-[#D93843]' : 'text-[#247D3C]'} font-semibold text-[32px] md:text-[44px] leading-tight transition-colors duration-300`}>
+              <h2 className="text-green-800 font-semibold text-[32px] md:text-[44px] leading-tight">
                 Bạn{' '}
-                <span className="font-bold">
+                <span className={`font-bold transition-colors duration-300 ${hasDepression ? 'text-[#D93843]' : 'text-[#247D3C]'}`}>
                   {hasDepression ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
                 dấu hiệu trầm cảm
@@ -208,9 +208,9 @@ export default function Results() {
           {/* Self-harm section */}
           <div className="px-10 py-10 md:px-16 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-0 md:justify-between relative">
             <div className="flex flex-col gap-5 max-w-[580px] z-10">
-              <h2 className={`${hasSuicideRisk ? 'text-[#D93843]' : 'text-[#247D3C]'} font-semibold text-[32px] md:text-[44px] leading-tight transition-colors duration-300`}>
+              <h2 className="text-green-800 font-semibold text-[32px] md:text-[44px] leading-tight">
                 Bạn{' '}
-                <span className="font-bold">
+                <span className={`font-bold transition-colors duration-300 ${hasSuicideRisk ? 'text-[#D93843]' : 'text-[#247D3C]'}`}>
                   {hasSuicideRisk ? 'CÓ' : 'KHÔNG CÓ'}
                 </span>{' '}
                 nguy cơ tự hại
